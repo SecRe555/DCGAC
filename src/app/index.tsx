@@ -1,98 +1,76 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import PlayerData from "@/components/player-data";
+import useGlobalState from "@/state/global-state";
+import { router } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+export default function IndexScreen() {
+  const { player1, setPlayer1, player2, setPlayer2 } = useGlobalState();
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
-
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+    <>
+      <View style={styles.appbar}>
+        <Text style={styles.appbarTitle}>DCGAC</Text>
+      </View>
+      <View style={styles.container}>
+        <PlayerData
+          player={1}
+          style={styles.playerInfo}
+          playerName={player1}
+          setPlayerName={setPlayer1}
+        />
+        <PlayerData
+          player={2}
+          style={[styles.playerInfo, { backgroundColor: "#000" }]}
+          textStyle={{ color: "#FFF" }}
+          playerName={player2}
+          setPlayerName={setPlayer2}
+          playerNameStyle={{ color: "#FFF", borderColor: "#FFF" }}
+        />
+        <Pressable style={styles.button} onPress={() => router.push("/game")}>
+          <Text style={styles.buttonText}>Iniciar partida</Text>
+        </Pressable>
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  appbar: {
+    height: 72,
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "#000",
+  },
+
+  appbarTitle: {
+    flex: 1,
+    fontSize: 24,
+    color: "#FFF",
+  },
+
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    paddingBottom: 24,
   },
-  safeArea: {
+
+  playerInfo: {
+    flex: 5,
+  },
+
+  button: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    justifyContent: "center",
+    alignSelf: "center",
+    marginTop: 24,
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    backgroundColor: "#000",
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+
+  buttonText: {
+    fontSize: 24,
+    color: "#FFF",
   },
 });
