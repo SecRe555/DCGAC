@@ -81,6 +81,40 @@ export default function PlayerGameInfo(props: PlayerGameInfoProps) {
               </Pressable>
             </View>
           </View>
+          {/* Memory counter */}
+          <View style={styles.memoryCounter}>
+            <View style={styles.memoryRow}>
+              {Array.from({ length: 5 }, (_, i) => i + 1).map((value) => (
+                <Pressable
+                  key={value}
+                  style={[
+                    styles.memoryButtons,
+                    { borderColor: props.foregroundColor },
+                  ]}
+                >
+                  <Text style={{ color: props.foregroundColor, fontSize: 24 }}>
+                    {value}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <View style={styles.memoryRow}>
+              {Array.from({ length: 5 }, (_, i) => i + 6).map((value) => (
+                <Pressable
+                  key={value}
+                  style={[
+                    styles.memoryButtons,
+                    { borderColor: props.foregroundColor },
+                  ]}
+                >
+                  <Text style={{ color: props.foregroundColor, fontSize: 24 }}>
+                    {value}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
           {/* Bottom Half */}
           <View style={styles.bottomHalf}>
             <View style={styles.cardCounter}>
@@ -150,8 +184,8 @@ const styles = StyleSheet.create({
   },
 
   counterButtons: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
@@ -159,6 +193,27 @@ const styles = StyleSheet.create({
   },
 
   buttonsText: {
-    fontSize: 18,
+    fontSize: 14,
+  },
+
+  memoryCounter: {
+    gap: 12,
+    paddingBottom: 15,
+  },
+
+  memoryRow: {
+    flexDirection: "row-reverse",
+    justifyContent: "space-around",
+    gap: 16,
+  },
+
+  memoryButtons: {
+    width: 52,
+    height: 52,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: "50%",
+    padding: 5,
   },
 });

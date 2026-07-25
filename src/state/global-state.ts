@@ -8,9 +8,9 @@ interface GlobalState {
 }
 
 const useGlobalState = create<GlobalState>((set) => ({
-  player1: "Jugador 1",
+  player1: "Persona 1",
   setPlayer1: (player) => set({ player1: player }),
-  player2: "Jugador 2",
+  player2: "Persona 2",
   setPlayer2: (player) => set({ player2: player }),
 }));
 

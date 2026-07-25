@@ -1,17 +1,9 @@
 import PlayerGameInfo from "@/components/player-game-info";
 import useGlobalState from "@/state/global-state";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function GameScreen() {
   const { player1, player2 } = useGlobalState();
-
-  const { width, height } = useWindowDimensions();
 
   return (
     <>
@@ -26,69 +18,9 @@ export default function GameScreen() {
         foregroundColor="#FFF"
         rotate="left"
       />
-      <View style={[styles.memoryCounter, { height: height }]}>
-        <Pressable style={styles.memoryButtons}>
-          <Text>10</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>9</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>8</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>7</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>6</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>5</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>4</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>3</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>2</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>1</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>0</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>1</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>2</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>3</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>4</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>5</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>6</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>7</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>8</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>9</Text>
-        </Pressable>
-        <Pressable style={styles.memoryButtons}>
-          <Text>10</Text>
+      <View style={styles.centerButtonContainer}>
+        <Pressable style={styles.centerButton}>
+          <Text style={styles.centerButtonText}>0</Text>
         </Pressable>
       </View>
     </>
@@ -100,19 +32,26 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  memoryCounter: {
+  centerButtonContainer: {
     position: "absolute",
-    justifyContent: "space-evenly",
-    alignItems: "center",
+    top: "50%",
+    left: "50%",
+    transform: [{ translateX: -30 }, { translateY: -25 }, { rotate: "90deg" }],
+    zIndex: 100,
   },
 
-  memoryButtons: {
-    width: 18,
-    height: 18,
+  centerButton: {
+    width: 52,
+    height: 52,
+    borderRadius: "50%",
+    borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1,
-    borderRadius: "50%",
-    padding: 5,
+    backgroundColor: "#FFF",
+  },
+
+  centerButtonText: {
+    fontSize: 24,
+    color: "#000",
   },
 });
