@@ -1,5 +1,6 @@
+import useGlobalState from "@/state/global-state";
 import { FontAwesomeFreeSolid } from "@react-native-vector-icons/fontawesome-free-solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutChangeEvent,
   Pressable,
@@ -11,11 +12,15 @@ import {
 
 interface PlayerGameInfoProps extends ViewProps {
   playerName: string;
-  foregroundColor?: string;
+  backgroundColor: string;
+  foregroundColor: string;
   rotate: "left" | "right";
 }
 
 export default function PlayerGameInfo(props: PlayerGameInfoProps) {
+  const { memoryValue, setMemoryValue, resetTrigger, setResetTrigger } =
+    useGlobalState();
+
   const [deckCards, setDeckCards] = useState(40);
   const [trashCards, setTrashCards] = useState(0);
 
@@ -24,16 +29,27 @@ export default function PlayerGameInfo(props: PlayerGameInfoProps) {
   const rotation = props.rotate === "left" ? "-90deg" : "90deg";
   const customForeground = { color: props.foregroundColor };
 
+  const isPressed = (index: number) => memoryValue === index;
+
   const onLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
     setSize({ width, height });
   };
 
+  useEffect(() => {
+    setDeckCards(40);
+    setTrashCards(0);
+  }, [resetTrigger]);
+
   return (
     <View
       {...props}
       onLayout={onLayout}
-      style={[styles.container, props.style]}
+      style={[
+        styles.container,
+        props.style,
+        { backgroundColor: props.backgroundColor || "#FFF" },
+      ]}
     >
       {size.width > 0 && (
         <View
@@ -59,6 +75,7 @@ export default function PlayerGameInfo(props: PlayerGameInfoProps) {
                   styles.counterButtons,
                   { borderColor: props.foregroundColor },
                 ]}
+                disabled={deckCards >= 50}
                 onPress={() => setDeckCards(deckCards + 1)}
               >
                 <FontAwesomeFreeSolid
@@ -66,12 +83,16 @@ export default function PlayerGameInfo(props: PlayerGameInfoProps) {
                   style={[customForeground, styles.buttonsText]}
                 />
               </Pressable>
-              <Text style={customForeground}>Deck: {deckCards}</Text>
+              <Text style={customForeground}>
+                Deck: {deckCards < 10 && "0"}
+                {deckCards}
+              </Text>
               <Pressable
                 style={[
                   styles.counterButtons,
                   { borderColor: props.foregroundColor },
                 ]}
+                disabled={deckCards <= 0}
                 onPress={() => setDeckCards(deckCards - 1)}
               >
                 <FontAwesomeFreeSolid
@@ -84,35 +105,65 @@ export default function PlayerGameInfo(props: PlayerGameInfoProps) {
           {/* Memory counter */}
           <View style={styles.memoryCounter}>
             <View style={styles.memoryRow}>
-              {Array.from({ length: 5 }, (_, i) => i + 1).map((value) => (
-                <Pressable
-                  key={value}
-                  style={[
-                    styles.memoryButtons,
-                    { borderColor: props.foregroundColor },
-                  ]}
-                >
-                  <Text style={{ color: props.foregroundColor, fontSize: 24 }}>
-                    {value}
-                  </Text>
-                </Pressable>
-              ))}
+              {Array.from({ length: 5 }, (_, i) => i + 1).map((value) => {
+                const trueValue = props.rotate === "left" ? -value : value;
+
+                return (
+                  <Pressable
+                    key={value}
+                    style={[
+                      styles.memoryButtons,
+                      { borderColor: props.foregroundColor },
+                      isPressed(trueValue)
+                        ? { backgroundColor: props.foregroundColor }
+                        : { backgroundColor: props.backgroundColor },
+                    ]}
+                    onPress={() => setMemoryValue(trueValue)}
+                  >
+                    <Text
+                      style={[
+                        { fontSize: 24 },
+                        isPressed(trueValue)
+                          ? { color: props.backgroundColor }
+                          : { color: props.foregroundColor },
+                      ]}
+                    >
+                      {value}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
 
             <View style={styles.memoryRow}>
-              {Array.from({ length: 5 }, (_, i) => i + 6).map((value) => (
-                <Pressable
-                  key={value}
-                  style={[
-                    styles.memoryButtons,
-                    { borderColor: props.foregroundColor },
-                  ]}
-                >
-                  <Text style={{ color: props.foregroundColor, fontSize: 24 }}>
-                    {value}
-                  </Text>
-                </Pressable>
-              ))}
+              {Array.from({ length: 5 }, (_, i) => i + 6).map((value) => {
+                const trueValue = props.rotate === "left" ? -value : value;
+
+                return (
+                  <Pressable
+                    key={value}
+                    style={[
+                      styles.memoryButtons,
+                      { borderColor: props.foregroundColor },
+                      isPressed(trueValue)
+                        ? { backgroundColor: props.foregroundColor }
+                        : { backgroundColor: props.backgroundColor },
+                    ]}
+                    onPress={() => setMemoryValue(trueValue)}
+                  >
+                    <Text
+                      style={[
+                        { fontSize: 24 },
+                        isPressed(trueValue)
+                          ? { color: props.backgroundColor }
+                          : { color: props.foregroundColor },
+                      ]}
+                    >
+                      {value}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
           </View>
           {/* Bottom Half */}
@@ -124,18 +175,23 @@ export default function PlayerGameInfo(props: PlayerGameInfoProps) {
                   { borderColor: props.foregroundColor },
                 ]}
                 onPress={() => setTrashCards(trashCards + 1)}
+                disabled={trashCards >= 50}
               >
                 <FontAwesomeFreeSolid
                   name="add"
                   style={[customForeground, styles.buttonsText]}
                 />
               </Pressable>
-              <Text style={customForeground}>Trash: {trashCards}</Text>
+              <Text style={customForeground}>
+                Trash: {trashCards < 10 && "0"}
+                {trashCards}
+              </Text>
               <Pressable
                 style={[
                   styles.counterButtons,
                   { borderColor: props.foregroundColor },
                 ]}
+                disabled={trashCards <= 0}
                 onPress={() => setTrashCards(trashCards - 1)}
               >
                 <FontAwesomeFreeSolid
@@ -155,8 +211,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "red",
   },
 
   rotated: {
@@ -167,8 +221,6 @@ const styles = StyleSheet.create({
 
     paddingVertical: 24,
     paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: "blue",
   },
 
   topHalf: {
@@ -197,8 +249,8 @@ const styles = StyleSheet.create({
   },
 
   memoryCounter: {
-    gap: 12,
-    paddingBottom: 15,
+    gap: 55,
+    paddingBottom: 25,
   },
 
   memoryRow: {

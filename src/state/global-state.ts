@@ -5,6 +5,10 @@ interface GlobalState {
   setPlayer1: (player: string) => void;
   player2: string;
   setPlayer2: (player: string) => void;
+  memoryValue: number;
+  setMemoryValue: (value: number) => void;
+  resetTrigger: boolean;
+  setResetTrigger: (trigger: boolean) => void;
 }
 
 const useGlobalState = create<GlobalState>((set) => ({
@@ -12,6 +16,10 @@ const useGlobalState = create<GlobalState>((set) => ({
   setPlayer1: (player) => set({ player1: player }),
   player2: "Persona 2",
   setPlayer2: (player) => set({ player2: player }),
+  memoryValue: 0,
+  setMemoryValue: (value) => set({ memoryValue: value }),
+  resetTrigger: false,
+  setResetTrigger: (trigger) => set({ resetTrigger: trigger }),
 }));
 
 export default useGlobalState;
